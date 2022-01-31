@@ -19,7 +19,8 @@ DATA = [
     ("389", "LDAP", "(Lightweight Directory Access Protocol)"),
     ("443", "HTTPS", "(Secure HTTP)"),
     ("465", "SMTPS", "(Secure SMTP)"),
-    ("541", "RSH", "(Remote Shell)"),
+    ("514", "RSH", "(Remote Shell, syslog)"),
+    ("631", "IPP", "(Internet printing protocol)"),
     ("636", "LDAPS", "(Secure LDAP)"),
     ("993", "IMAPS", "(Secure IMAP)"),
     ("995", "POP3S", "(Secure POP3)")
