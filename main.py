@@ -9,6 +9,7 @@ DATA = [
     ("23", "TELNET", "(Remote connection without encryption)"),
     ("25", "SMTP", "(Simple Mail Transfer Protocol)"),
     ("53", "DNS", "(Domain Name System)"),
+    ("69", "TFPT" "(Trivial File Transfer Protocol)"),
     ("80", "HTTP", "(Hypertext Transfer Protocol)"),
     ("110", "POP3", "(Post Office Protocol)"),
     ("123", "NTP", "(Network Time Protocol)"),
