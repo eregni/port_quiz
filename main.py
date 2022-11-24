@@ -4,30 +4,47 @@
 import re
 from random import shuffle
 
+# TODO:
+# 1701 Layer 2 Tunneling
+# 1720 H.323
+# 1723 PPTP
+# 2427, 2727 MGCP
+# 5004, 5005 RTP
+# 5060, 5061 SIP
+# 5900 TightVNC 
 DATA = [
-    ("20", "FTP data", "(File transfer Protocol)"),
-    ("21", "FTP control", "(File transfer Protocol)"),
+    ("20", "FTP data", "(File Transfer Protocol)"),
+    ("21", "FTP control", "(File Transfer Protocol)"),
     ("22", "SSH", "(Secure Socket Shell)"),
-    ("23", "TELNET", "(Remote connection without encryption)"),
+    ("23", "TELNET", "(TELetype NETwork)"),
     ("25", "SMTP", "(Simple Mail Transfer Protocol)"),
+    ("49", "TACACS+", "(Terminal Access Controller Access-Control System plus)")
     ("53", "DNS", "(Domain Name System)"),
-    ("67", "DHCP", "(Dynamic host control protocol)"),
+    ("67", "DHCP - bootpc", "(Dynamic Host Control Protocol - server)"),
+    ("68", "DHCP - bootpc", "(Dynamic Host Control Protocol - client)"),
     ("69", "TFPT", "(Trivial File Transfer Protocol)"),
     ("80", "HTTP", "(Hypertext Transfer Protocol)"),
+    ("88", "Kerberos", ""),
     ("110", "POP3", "(Post Office Protocol)"),
+    ("119", "NNTP", "Network News Transfer Protocol"),
     ("123", "NTP", "(Network Time Protocol)"),
-    ("139", "Netbios", ""),
+    ("139", "Netbios", "(Network Basic Input Output System)"),  # TODO: netbios uses 3 ports
     ("143", "IMAP", "(Internet Message Access Protocol)"),
     ("161", "SNMP", "(Simple Network Management Protocol)"),
     ("162", "SNMPTRAP", "(SNMP notifications)"),
+    ("194", "IRC", "(Internet Relay Chat)"),
     ("389", "LDAP", "(Lightweight Directory Access Protocol)"),
     ("443", "HTTPS", "(Secure HTTP)"),
+    ("445", "SMB", "(Server Message Block)"),
     ("465", "SMTPS", "(Secure SMTP)"),
     ("514", "RSH", "(Remote Shell, syslog)"),
-    ("631", "IPP", "(Internet printing protocol)"),
-    ("636", "LDAPS", "(Secure LDAP)"),
-    ("993", "IMAPS", "(Secure IMAP)"),
-    ("995", "POP3S", "(Secure POP3)")
+    ("631", "IPP", "(Internet Printing Protocol)"),
+    ("636", "LDAPS", "(Lightweight Directory Access Protocol Secure)"),
+    ("993", "IMAPS", "(Internet Message Access Protocol Secure)"),
+    ("995", "POP3S", "(Post Office Protocol Secure)"),
+    ("1812", "RADIUS", "(Remote Authentication Dial-In User Service)"),
+    ("1813", "RADIUS - accounting", "(Remote Authentication Dial-In User Service)") # TODO: RADIUS uses more ports: 1645, 1646, 7082
+    ("3389", "RDP", "(Remote Desktop Protocol)")
 ]
 
 def play_ports(data: list[tuple]) -> None:
