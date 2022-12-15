@@ -1,91 +1,92 @@
 #!/usr/bin/python3
-#TODO: add protocol + port + TCP|UDP
-#TODO: Mix it all ports <-> nrs
+# TODO: colors...
 import re
+from dataclasses import dataclass
 from random import shuffle
 
-# TODO:
-# 1701 Layer 2 Tunneling
-# 1720 H.323
-# 1723 PPTP
-# 2427, 2727 MGCP
-# 5004, 5005 RTP
-# 5060, 5061 SIP
-# 5900 TightVNC 
-DATA = [
-    ("20", "FTP data", "(File Transfer Protocol)"),
-    ("21", "FTP control", "(File Transfer Protocol)"),
-    ("22", "SSH", "(Secure Socket Shell)"),
-    ("23", "TELNET", "(TELetype NETwork)"),
-    ("25", "SMTP", "(Simple Mail Transfer Protocol)"),
-    ("49", "TACACS+", "(Terminal Access Controller Access-Control System plus)")
-    ("53", "DNS", "(Domain Name System)"),
-    ("67", "DHCP - bootpc", "(Dynamic Host Control Protocol - server)"),
-    ("68", "DHCP - bootpc", "(Dynamic Host Control Protocol - client)"),
-    ("69", "TFPT", "(Trivial File Transfer Protocol)"),
-    ("80", "HTTP", "(Hypertext Transfer Protocol)"),
-    ("88", "Kerberos", ""),
-    ("110", "POP3", "(Post Office Protocol)"),
-    ("119", "NNTP", "Network News Transfer Protocol"),
-    ("123", "NTP", "(Network Time Protocol)"),
-    ("139", "Netbios", "(Network Basic Input Output System)"),  # TODO: netbios uses 3 ports
-    ("143", "IMAP", "(Internet Message Access Protocol)"),
-    ("161", "SNMP", "(Simple Network Management Protocol)"),
-    ("162", "SNMPTRAP", "(SNMP notifications)"),
-    ("194", "IRC", "(Internet Relay Chat)"),
-    ("389", "LDAP", "(Lightweight Directory Access Protocol)"),
-    ("443", "HTTPS", "(Secure HTTP)"),
-    ("445", "SMB", "(Server Message Block)"),
-    ("465", "SMTPS", "(Secure SMTP)"),
-    ("514", "RSH", "(Remote Shell, syslog)"),
-    ("631", "IPP", "(Internet Printing Protocol)"),
-    ("636", "LDAPS", "(Lightweight Directory Access Protocol Secure)"),
-    ("993", "IMAPS", "(Internet Message Access Protocol Secure)"),
-    ("995", "POP3S", "(Post Office Protocol Secure)"),
-    ("1812", "RADIUS", "(Remote Authentication Dial-In User Service)"),
-    ("1813", "RADIUS - accounting", "(Remote Authentication Dial-In User Service)") # TODO: RADIUS uses more ports: 1645, 1646, 7082
-    ("3389", "RDP", "(Remote Desktop Protocol)")
+
+@dataclass
+class Protocol:
+    port_number: str
+    name: str
+    description: str = ""
+
+
+PROTOCOLS = [
+    Protocol("20", "FTP data", "File Transfer Protocol"),
+    Protocol("21", "FTP control", "File Transfer Protocol"),
+    Protocol("22", "SSH", "Secure Socket Shell"),
+    Protocol("23", "TELNET", "TELetype NETwork"),
+    Protocol("25", "SMTP", "Simple Mail Transfer Protocol"),
+    Protocol("49", "TACACS", "Terminal Access Controller Access-Control System"),
+    Protocol("53", "DNS", "Domain Name System"),
+    Protocol("67", "DHCP", "Dynamic Host Control Protocol - server - bootps"),
+    Protocol("68", "DHCP", "Dynamic Host Control Protocol - client - bootpc"),
+    Protocol("69", "TFPT", "Trivial File Transfer Protocol"),
+    Protocol("80", "HTTP", "Hypertext Transfer Protocol"),
+    Protocol("88", "Kerberos", "Is also a dog with 3 heads"),
+    Protocol("110", "POP3", "Post Office Protocol"),
+    Protocol("119", "NNTP", "Network News Transfer Protocol"),
+    Protocol("123", "NTP", "Network Time Protocol"),
+    Protocol("139", "Netbios", "Network Basic Input Output System"),
+    Protocol("143", "IMAP", "Internet Message Access Protocol"),
+    Protocol("161", "SNMP", "Simple Network Management Protocol"),
+    Protocol("162", "SNMPTRAP", "SNMP notifications"),
+    Protocol("194", "IRC", "Internet Relay Chat"),
+    Protocol("389", "LDAP", "Lightweight Directory Access Protocol"),
+    Protocol("443", "HTTPS", "Secure HTTP"),
+    Protocol("445", "SMB", "Server Message Block"),
+    Protocol("465", "SMTPS", "Secure SMTP"),
+    Protocol("514", "RSH", "Remote Shell, syslog"),
+    Protocol("587", "Submission", "SMTP submission"),
+    Protocol("631", "IPP", "Internet Printing Protocol"),
+    Protocol("636", "LDAPS", "Lightweight Directory Access Protocol Secure"),
+    Protocol("993", "IMAPS", "Internet Message Access Protocol Secure"),
+    Protocol("995", "POP3S", "Post Office Protocol Secure"),
+    Protocol("3389", "RDP", "Remote Desktop Protocol")
 ]
 
-def play_ports(data: list[tuple]) -> None:
-    shuffle(DATA)
+
+def play_ports(protocols: list[Protocol]) -> None:
+    """Give port number by given protocol name"""
     wrong = []
-    for item in data:
-        answer = input(f"Give port for {item[1]} {item[2]}: ")
-        if answer != item[0]:
-            wrong.append((answer, item))
-    
-    correct = len(data) - len(wrong)
-    print(f"\nScore: {correct}/{len(data)}")
-    if len(wrong) == 0:
-        print("Perfect!")
-    else:
-        print("\nThese answers where incorrect:")
-        for item in wrong:
-            print(f"{item[1][1]}: You answered '{item[0]}'. Right answer -> {item[1][0]}")
+    for protocol in protocols:
+        answer = input(f"Give port for {protocol.name} ({protocol.description}): ")
+        if answer != protocol.port_number:
+            wrong.append((answer, protocol))
+
+    evaluate(wrong)
 
 
-def play_protocols(data: list[tuple]) -> None:
-    shuffle(DATA)
-    wrong = []
-    for item in data:
-        answer = input(f"Give protocol for port {item[0]}: ")
+def play_protocols(protocols: list[Protocol]) -> None:
+    """Give protocol name by given port number"""
+    wrong: list[tuple] = []
+    for protocol in protocols:
+        answer = input(f"Give protocol for port {protocol.port_number}: ")
         re_pattern = re.compile('[ ()]')
         _answer = re.sub(re_pattern, '', answer).lower()
-        right_answer = re.sub(re_pattern, '', item[1]).lower()
+        right_answer = re.sub(re_pattern, '', protocol.name).lower()
         if _answer != right_answer:
-            wrong.append((answer, item))
-           
-    print(f"\nScore: {correct}/{len(data)}")
-    if len(wrong) == 0:
-        print("Perfect!")
-    else:
-        print("\nThese answers where incorrect:")
-        for item in wrong:
-            print(f"Port {item[1][0]}: You answered '{item[0]}'. Right answer -> {item[1][1]}")
+            wrong.append((answer, protocol))
 
-def evaluation():
-    Raise NotImplentedError
+    evaluate(wrong)
+
+
+def evaluate(wrong_answers: list[tuple:[str, Protocol]]) -> None:
+    correct = len(PROTOCOLS) - len(wrong_answers)
+    print(f"\nScore: {correct}/{len(PROTOCOLS)}")
+    if len(wrong_answers) == 0:
+        print("Perfect!")
+
+    if wrong_answers:
+        align_col1 = max(len(p.name) for p in PROTOCOLS) + 2
+        align_col2 = 12 + max([len(a[0]) for a in wrong_answers]) + 2  # Default answer len + max len of protocol name
+        for item in wrong_answers:
+            protocol = item[1]
+            answer = f"Answered: '{item[0]}'" if item[0] != "" else "No answer. "
+            print(f"{protocol.name:<{align_col1}} {answer:<{align_col2}}"
+                  f"Right answer -> {protocol.port_number:<{align_col2}}")
+
 
 print("#########################")
 print("# Port & Protocol quiz! #")
@@ -97,9 +98,10 @@ if __name__ == "__main__":
     while True:
         print("\nSelect quiz")
         choice = input("Ports(1) of Protocols(2) or quit(q): ")
+        shuffle(PROTOCOLS)
         if choice in ["Q", "q"]:
             exit(0)
         elif choice == "1":
-            play_ports(DATA)
+            play_ports(PROTOCOLS)
         elif choice == "2":
-            play_protocols(DATA)
+            play_protocols(PROTOCOLS)
