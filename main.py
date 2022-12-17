@@ -3,6 +3,7 @@
 import re
 from dataclasses import dataclass
 from random import shuffle
+from colorama import Fore, Back
 
 
 @dataclass
@@ -10,6 +11,13 @@ class Protocol:
     port_number: str
     name: str
     description: str = ""
+
+
+@dataclass
+class Exercise:
+    question: str
+    answer: str
+    description: str = None
 
 
 PROTOCOLS = [
@@ -49,43 +57,63 @@ PROTOCOLS = [
 
 def play_ports(protocols: list[Protocol]) -> None:
     """Give port number by given protocol name"""
-    wrong = []
-    for protocol in protocols:
-        answer = input(f"Give port for {protocol.name} ({protocol.description}): ")
-        if answer != protocol.port_number:
-            wrong.append((answer, protocol))
+    exercises: list[Exercise] = []
+    wrong: list[tuple[str, Exercise]] = []
+    for prot in protocols:
+        exercises.append(Exercise(prot.name, prot.port_number, prot.description))
+
+    print_line()
+    print("\nPorts:")
+    for exercise in exercises:
+        answer = input(f"Give port for {exercise.question} ({exercise.description}): ")
+        if answer != exercise.answer:
+            wrong.append((answer, exercise))
 
     evaluate(wrong)
 
 
 def play_protocols(protocols: list[Protocol]) -> None:
     """Give protocol name by given port number"""
+    exercises: list[Exercise] = []
     wrong: list[tuple] = []
-    for protocol in protocols:
-        answer = input(f"Give protocol for port {protocol.port_number}: ")
+    for prot in protocols:
+        exercises.append(Exercise(prot.port_number, prot.name))
+
+    print_line()
+    print("\nProtocols:")
+    for exercise in exercises:
+        answer = input(f"Give protocol for port {exercise.question}: ")
         re_pattern = re.compile('[ ()]')
         _answer = re.sub(re_pattern, '', answer).lower()
-        right_answer = re.sub(re_pattern, '', protocol.name).lower()
+        right_answer = re.sub(re_pattern, '', exercise.answer).lower()
         if _answer != right_answer:
-            wrong.append((answer, protocol))
+            wrong.append((answer, exercise))
 
     evaluate(wrong)
 
 
-def evaluate(wrong_answers: list[tuple:[str, Protocol]]) -> None:
+def evaluate(wrong_answers: list[tuple[str, Exercise]]) -> None:
     correct = len(PROTOCOLS) - len(wrong_answers)
+    print_line()
     print(f"\nScore: {correct}/{len(PROTOCOLS)}")
     if len(wrong_answers) == 0:
-        print("Perfect!")
+        print(f"{Fore.GREEN}Perfect!{Fore.RESET}")
 
     if wrong_answers:
-        align_col1 = max(len(p.name) for p in PROTOCOLS) + 2
-        align_col2 = 12 + max([len(a[0]) for a in wrong_answers]) + 2  # Default answer len + max len of protocol name
+        print("Need to review:")
+        align_col1 = max(len(i[1].question) for i in wrong_answers) + 1
+        align_col2 = max([len(i[1].answer) for i in wrong_answers]) + 1  # Default answer len + max len of protocol name
         for item in wrong_answers:
-            protocol = item[1]
-            answer = f"Answered: '{item[0]}'" if item[0] != "" else "No answer. "
-            print(f"{protocol.name:<{align_col1}} {answer:<{align_col2}}"
-                  f"Right answer -> {protocol.port_number:<{align_col2}}")
+            exercise = item[1]
+            user_answer = f"Answered: '{item[0]}'" if item[0] != "" else "(No answer) "
+            print(f"{exercise.question:<{align_col1}}"
+                  f"-> {exercise.answer:<{align_col2}}"
+                  f"{user_answer}")
+    print_line()
+
+
+def print_line() -> None:
+    print("-" * 30)
 
 
 print("#########################")
