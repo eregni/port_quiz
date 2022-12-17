@@ -1,9 +1,8 @@
 #!/usr/bin/python3
-# TODO: colors...
 import re
 from dataclasses import dataclass
 from random import shuffle
-from colorama import Fore, Back
+from colorama import Fore
 
 
 @dataclass
@@ -30,11 +29,10 @@ PROTOCOLS = [
     Protocol("53", "DNS", "Domain Name System"),
     Protocol("67", "DHCP", "Dynamic Host Control Protocol - server - bootps"),
     Protocol("68", "DHCP", "Dynamic Host Control Protocol - client - bootpc"),
-    Protocol("69", "TFPT", "Trivial File Transfer Protocol"),
+    Protocol("69", "TFTP", "Trivial File Transfer Protocol"),
     Protocol("80", "HTTP", "Hypertext Transfer Protocol"),
     Protocol("88", "Kerberos", "Is also a dog with 3 heads"),
     Protocol("110", "POP3", "Post Office Protocol"),
-    Protocol("119", "NNTP", "Network News Transfer Protocol"),
     Protocol("123", "NTP", "Network Time Protocol"),
     Protocol("139", "Netbios", "Network Basic Input Output System"),
     Protocol("143", "IMAP", "Internet Message Access Protocol"),
