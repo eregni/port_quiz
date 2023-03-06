@@ -27,8 +27,8 @@ PROTOCOLS = [
     Protocol("25", "SMTP", "Simple Mail Transfer Protocol"),
     Protocol("49", "TACACS", "Terminal Access Controller Access-Control System"),
     Protocol("53", "DNS", "Domain Name System"),
-    Protocol("67", "DHCP", "Dynamic Host Control Protocol - server - bootps"),
-    Protocol("68", "DHCP", "Dynamic Host Control Protocol - client - bootpc"),
+    Protocol("67", "DHCP server", "Dynamic Host Control Protocol - bootps"),
+    Protocol("68", "DHCP client", "Dynamic Host Control Protocol - bootc"),
     Protocol("69", "TFTP", "Trivial File Transfer Protocol"),
     Protocol("80", "HTTP", "Hypertext Transfer Protocol"),
     Protocol("88", "Kerberos", "Is also a dog with 3 heads"),
@@ -98,7 +98,7 @@ def evaluate(wrong_answers: list[tuple[str, Exercise]]) -> None:
         print(f"{Fore.GREEN}Perfect!{Fore.RESET}")
 
     if wrong_answers:
-        print("Need to review:")
+        print(f"{Fore.RED}Need to review:{Fore.RESET}")
         align_col1 = max(len(i[1].question) for i in wrong_answers) + 1
         align_col2 = max([len(i[1].answer) for i in wrong_answers]) + 1  # Default answer len + max len of protocol name
         for item in wrong_answers:
